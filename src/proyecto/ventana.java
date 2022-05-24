@@ -44,6 +44,8 @@ public class ventana extends javax.swing.JFrame {
             //2ºCrear el objeto Statement
             sentenciaClases = conexion.createStatement();
             sentencia = conexion.createStatement();
+            sentenciaIVA = conexion.createStatement();
+            sentenciaProducto = conexion.createStatement();
         } catch (SQLException ex) {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,6 +169,7 @@ public class ventana extends javax.swing.JFrame {
         lblTotal.setBackground(new java.awt.Color(255, 255, 255));
         lblTotal.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lblTotal.setForeground(new java.awt.Color(0, 204, 0));
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTotal.setOpaque(true);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -249,7 +252,7 @@ public class ventana extends javax.swing.JFrame {
                 // String sentencia_sql = "SELECT `nombre`,`precio` FROM `producto` WHERE `descripcion`='" + cmbFrutas.getSelectedItem().toString() + "';";
                 String sentencia_sql = "SELECT producto.nombre, producto.precio FROM producto INNER JOIN categoria ON producto.cod_categoria = categoria.id WHERE producto.cod_categoria=" + (cmbFrutas.getSelectedIndex() + 1) + ";";
                 //String sentencia_sql = "SELECT producto.nombre,producto.precio FROM `producto` A LEFT JOIN `categoria` ON producto.cod_categoria = categoria.id WHERE categoria.id = " + (cmbFrutas.getSelectedIndex()+1) + ";";
-                resultado = sentencia.executeQuery(sentencia_sql);
+                resultado = sentenciaIVA.executeQuery(sentencia_sql);
 
                 Object[] columnas = new Object[2];
 
@@ -268,49 +271,48 @@ public class ventana extends javax.swing.JFrame {
     private void tablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProductosMouseClicked
 
         String s = JOptionPane.showInputDialog(this, "Cantidad", "Cantidad de :" + tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0), JOptionPane.QUESTION_MESSAGE);
+        Producto p = null;
+        lineaProducto lineaProd;
 
         if (s != null) {
             if (!s.isEmpty()) {
-                int cantidad = Integer.parseInt(s);
 
-                int iva = cmbFrutas.getSelectedIndex();
+                try {
 
-                String producto = (String) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0);
+                    String nombreProducto = (String) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0);//Obtenemos nombre del producto en la tabla 
+                    String sentenciaSQL = "SELECT * FROM producto WHERE producto.nombre = '" + nombreProducto + "';";
+                    resultadoProducto = sentenciaProducto.executeQuery(sentenciaSQL);
+                    
+                    while (resultadoProducto.next()) {
+                        int id = resultadoProducto.getInt("id");
+                        String nombre = resultadoProducto.getString("nombre");
+                        double precio = resultadoProducto.getDouble("precio");
+                        int iva = resultadoProducto.getInt("iva");
+                        int cod_categoria = resultadoProducto.getInt("cod_categoria");
 
-                float precio = (float) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 1);
-                Object linea[] = new Object[3];
-                linea[0] = producto;
-                linea[1] = cantidad;
+                        p = new Producto(id, nombre, precio, iva, cod_categoria);
+                    }
 
-                double n;
-                switch (iva) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        n = 1.04 * (precio * cantidad);
-                        linea[2] = (float) (Math.round(n * 100.0) / 100.0);
-                        break;
+                    int cantidad = Integer.parseInt(s);
 
-                    case 4:
-                    case 5:
-                        n = 1.1 * (precio * cantidad);
-                        linea[2] = (float) (Math.round(n * 100.0) / 100.0);
-                        break;
-                    case 6:
-                        n = 1.21 * (precio * cantidad);
-                        linea[2] = (float) (Math.round(n * 100.0) / 100.0);
-                        break;
+                    lineaProd = new lineaProducto(p, cantidad);
 
-                }
+                    float precio = (float) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 1);
 
-                modeloCompras.addRow(linea);
-                float total = 0;
-                for (int i = 0; i < tablaCompra.getRowCount(); i++) {
+                    Object linea[] = lineaProd.getLinea();     //Array con los datos que vamos a meter en la tabla de COMPRA
 
-                    total += (float) tablaCompra.getValueAt(i, 2);
+                    modeloCompras.addRow(linea); //Añadimos linea
 
-                    lblTotal.setText((Math.round(total * 100.0) / 100.0) + "");
+                    double total = 0;                //Acumulador precio total
+                    for (int i = 0; i < tablaCompra.getRowCount(); i++) {
+
+                        total +=  (double)tablaCompra.getValueAt(i, 2);
+                        
+
+                        lblTotal.setText((Math.round(total * 100.0) / 100.0) + " €");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
             }
@@ -325,7 +327,8 @@ public class ventana extends javax.swing.JFrame {
             modeloCompras.removeRow(tablaCompra.getSelectedRow());
 
             float total = 0;
-            for (int i = 0; i < tablaCompra.getRowCount(); i++) {
+
+            for (int i = 0; i < tablaCompra.getRowCount(); i++) {   //Actualizamos precio
 
                 total += (float) tablaCompra.getValueAt(i, 2);
 
@@ -401,8 +404,14 @@ public class ventana extends javax.swing.JFrame {
     private java.sql.Connection conexion;
     private java.sql.Statement sentenciaClases;
     private java.sql.Statement sentencia;
+    private java.sql.Statement sentenciaIVA;
+    
+    private java.sql.Statement sentenciaProducto;
+    
+    
     private java.sql.ResultSet resultadoClases;
     private java.sql.ResultSet resultado;
+    private java.sql.ResultSet resultadoProducto;
     private DefaultTableModel modeloProductos;
     private DefaultTableModel modeloCompras;
     private JTableHeader header;
