@@ -13,15 +13,25 @@ public class Producto {
     private int id;
     private String nombre;
     private double precio;
+    private int stock;
     private int iva;
     private int cod_categoria;
 
-    public Producto(int id, String nombre, double precio, int iva, int cod_categoria) {
+    public Producto(int id, String nombre, double precio,int stock, int iva, int cod_categoria) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
+        this.stock = stock;
         this.iva = iva;
         this.cod_categoria = cod_categoria;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
   
@@ -64,6 +74,13 @@ public class Producto {
     public void setIva(int iva) {
         this.iva = iva;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
+    
     
     
 }

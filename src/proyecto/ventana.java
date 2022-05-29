@@ -9,6 +9,7 @@ import bd.Conexion;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,19 +25,26 @@ public class ventana extends javax.swing.JFrame {
     /**
      * Creates new form ventana
      */
-    public ventana() {
+    private int id;
+
+    public ventana(int id) {
         initComponents();
         conectarBD();
         initTablaProductos();
         initTablaCompras();
         initCombo();
+        this.id = 3;
+        lblIdEmpleado.setText(id + "");
+        
+         idTicket = 19;
+
     }
 
-    private void conectarBD() {
+    private void conectarBD()  {
         try {
             //1ºCrear el objeto Connection
             conexion = null;
-            conexion = Conexion.mySQL("fruteria2", "root", "");
+            conexion = Conexion.mySQL("fruteria3", "root", "");
             if (conexion == null) {
                 JOptionPane.showMessageDialog(this, "ERROR, ha sido posible conectar con la BD");
                 System.exit(0);
@@ -46,6 +54,8 @@ public class ventana extends javax.swing.JFrame {
             sentencia = conexion.createStatement();
             sentenciaIVA = conexion.createStatement();
             sentenciaProducto = conexion.createStatement();
+            sentenciaFactura = conexion.createStatement();
+            sentenciaLineaCompra = conexion.createStatement();
         } catch (SQLException ex) {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,8 +109,10 @@ public class ventana extends javax.swing.JFrame {
         panelBotones = new javax.swing.JPanel();
         btnBorrar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnConfirmar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        lblIdEmpleado = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,14 +130,14 @@ public class ventana extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nombre", "Precio"
+                "Nombre", "Precio", "Stock"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class
+                java.lang.String.class, java.lang.Double.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -144,6 +156,10 @@ public class ventana extends javax.swing.JFrame {
             }
         });
         scroll.setViewportView(tablaProductos);
+        if (tablaProductos.getColumnModel().getColumnCount() > 0) {
+            tablaProductos.getColumnModel().getColumn(0).setMinWidth(150);
+            tablaProductos.getColumnModel().getColumn(0).setMaxWidth(150);
+        }
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("CATEGORIA");
@@ -157,14 +173,25 @@ public class ventana extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Object.class, java.lang.Integer.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
         jScrollPane1.setViewportView(tablaCompra);
+        if (tablaCompra.getColumnModel().getColumnCount() > 0) {
+            tablaCompra.getColumnModel().getColumn(0).setMinWidth(150);
+            tablaCompra.getColumnModel().getColumn(0).setMaxWidth(150);
+        }
 
         lblTotal.setBackground(new java.awt.Color(255, 255, 255));
         lblTotal.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -175,7 +202,7 @@ public class ventana extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("TOTAL: ");
 
-        panelBotones.setLayout(new java.awt.GridLayout(4, 0, 0, 5));
+        panelBotones.setLayout(new java.awt.GridLayout(0, 3, 0, 5));
 
         btnBorrar.setText("Borrar");
         btnBorrar.addActionListener(new java.awt.event.ActionListener() {
@@ -193,53 +220,86 @@ public class ventana extends javax.swing.JFrame {
         });
         panelBotones.add(btnCancelar);
 
-        jButton3.setText("Pagar");
-        panelBotones.add(jButton3);
+        btnConfirmar.setBackground(new java.awt.Color(51, 255, 51));
+        btnConfirmar.setText("Confimar");
+        btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConfirmarActionPerformed(evt);
+            }
+        });
+        panelBotones.add(btnConfirmar);
 
-        jButton4.setText("Nueva compra");
-        panelBotones.add(jButton4);
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Id Empleado");
+
+        lblIdEmpleado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel4.setText("Venta ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(648, 648, 648)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(69, 69, 69)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cmbFrutas, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(31, 31, 31)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(73, Short.MAX_VALUE))
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblIdEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cmbFrutas, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(49, 49, 49)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(167, 167, 167)
+                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmbFrutas, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                    .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbFrutas, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(scroll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblIdEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         pack();
@@ -250,17 +310,23 @@ public class ventana extends javax.swing.JFrame {
             try {
                 modeloProductos.setRowCount(0);
                 // String sentencia_sql = "SELECT `nombre`,`precio` FROM `producto` WHERE `descripcion`='" + cmbFrutas.getSelectedItem().toString() + "';";
-                String sentencia_sql = "SELECT producto.nombre, producto.precio FROM producto INNER JOIN categoria ON producto.cod_categoria = categoria.id WHERE producto.cod_categoria=" + (cmbFrutas.getSelectedIndex() + 1) + ";";
+                String sentencia_sql = "SELECT producto.nombre, producto.precio, producto.stock FROM producto INNER JOIN categoria ON producto.cod_categoria = categoria.id WHERE producto.cod_categoria=" + (cmbFrutas.getSelectedIndex() + 1) + ";";
                 //String sentencia_sql = "SELECT producto.nombre,producto.precio FROM `producto` A LEFT JOIN `categoria` ON producto.cod_categoria = categoria.id WHERE categoria.id = " + (cmbFrutas.getSelectedIndex()+1) + ";";
                 resultado = sentenciaIVA.executeQuery(sentencia_sql);
 
-                Object[] columnas = new Object[2];
+                Object[] columnas = new Object[3];
 
                 while (resultado.next()) {
                     columnas[0] = resultado.getString("nombre");
                     columnas[1] = resultado.getFloat("precio");
+                    columnas[2] = resultado.getInt("stock");
 
-                    modeloProductos.addRow(columnas);
+                    if (resultado.getInt("stock") < 0) {
+
+                    } else {  //Si hay stock
+                        modeloProductos.addRow(columnas);
+                    }
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
@@ -270,34 +336,44 @@ public class ventana extends javax.swing.JFrame {
 
     private void tablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProductosMouseClicked
 
-        String s = JOptionPane.showInputDialog(this, "Cantidad", "Cantidad de :" + tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0), JOptionPane.QUESTION_MESSAGE);
         Producto p = null;
-        lineaProducto lineaProd;
+        lineaProducto lineaProd = null;
+
+        try {
+
+            //Obetenemos producto
+            String nombreProducto = (String) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0);//Obtenemos nombre del producto en la tabla 
+            String sentenciaSQL = "SELECT * FROM producto WHERE producto.nombre = '" + nombreProducto + "';";
+            resultadoProducto = sentenciaProducto.executeQuery(sentenciaSQL);
+
+            while (resultadoProducto.next()) {
+                int id = resultadoProducto.getInt("id");
+                String nombre = resultadoProducto.getString("nombre");
+                double precio = resultadoProducto.getDouble("precio");
+                int stock = resultadoProducto.getInt("stock");
+                int iva = resultadoProducto.getInt("iva");
+                int cod_categoria = resultadoProducto.getInt("cod_categoria");
+                p = new Producto(id, nombre, precio, stock, iva, cod_categoria);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }//Tenemos producto
+
+        String s = JOptionPane.showInputDialog(this, "Cantidad", "Cantidad de :" + tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0), JOptionPane.QUESTION_MESSAGE);
 
         if (s != null) {
             if (!s.isEmpty()) {
 
-                try {
+                int cantidad = Integer.parseInt(s);
 
-                    String nombreProducto = (String) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0);//Obtenemos nombre del producto en la tabla 
-                    String sentenciaSQL = "SELECT * FROM producto WHERE producto.nombre = '" + nombreProducto + "';";
-                    resultadoProducto = sentenciaProducto.executeQuery(sentenciaSQL);
-                    
-                    while (resultadoProducto.next()) {
-                        int id = resultadoProducto.getInt("id");
-                        String nombre = resultadoProducto.getString("nombre");
-                        double precio = resultadoProducto.getDouble("precio");
-                        int iva = resultadoProducto.getInt("iva");
-                        int cod_categoria = resultadoProducto.getInt("cod_categoria");
-
-                        p = new Producto(id, nombre, precio, iva, cod_categoria);
-                    }
-
-                    int cantidad = Integer.parseInt(s);
-
+                if (cantidad > p.getStock()) {
+                    JOptionPane.showMessageDialog(this, "No quedan");
+                } else {
+                    //Si la cantidad es adecuada
                     lineaProd = new lineaProducto(p, cantidad);
 
-                    float precio = (float) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 1);
+                    double precio = p.getPrecio();
 
                     Object linea[] = lineaProd.getLinea();     //Array con los datos que vamos a meter en la tabla de COMPRA
 
@@ -306,15 +382,12 @@ public class ventana extends javax.swing.JFrame {
                     double total = 0;                //Acumulador precio total
                     for (int i = 0; i < tablaCompra.getRowCount(); i++) {
 
-                        total +=  (double)tablaCompra.getValueAt(i, 2);
-                        
+                        total += (double) tablaCompra.getValueAt(i, 2);//Row de precio
 
                         lblTotal.setText((Math.round(total * 100.0) / 100.0) + " €");
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
-                }
 
+                }
             }
         }
 
@@ -351,6 +424,31 @@ public class ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
+        try {
+            LocalDate fecha = LocalDate.now();
+            System.out.println(this.idTicket);
+            String sql = "INSERT INTO `ticket`(`fecha`, `id_empleado`) VALUES ('" + fecha + "'," + 3 + ");";
+            sentenciaFactura.execute(sql);
+            modeloCompras.fireTableDataChanged();
+            lineaProducto linea;
+            Producto p;
+            for(int i = 0;i<tablaCompra.getRowCount(); i++){    //Recorremos tablaCompras para obtener cada linea de compra y hacer el insert
+                 p = (Producto)tablaCompra.getValueAt(i, 0);
+                 int idProducto = p.getId(); //Obtenemos id del producto
+                 int cantidad = (int)tablaCompra.getValueAt(i, 1);
+                 double precio = (double)tablaCompra.getValueAt(i, 2);
+                 
+                 String sentenciaLinea = "INSERT INTO `lineaticket`(`idticket`, `idproducto`, `cantidad`, `precio`) VALUES ("+ this.idTicket +","+ idProducto +"," + cantidad +"," + precio +")";
+                 sentenciaLineaCompra.execute(sentenciaLinea);
+                 idTicket++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnConfirmarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -381,7 +479,7 @@ public class ventana extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ventana().setVisible(true);
+                new ventana(0).setVisible(true);
             }
         });
     }
@@ -389,12 +487,14 @@ public class ventana extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnConfirmar;
     private javax.swing.JComboBox<String> cmbFrutas;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblIdEmpleado;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JScrollPane scroll;
@@ -405,14 +505,14 @@ public class ventana extends javax.swing.JFrame {
     private java.sql.Statement sentenciaClases;
     private java.sql.Statement sentencia;
     private java.sql.Statement sentenciaIVA;
-    
-    private java.sql.Statement sentenciaProducto;
-    
-    
+    private java.sql.Statement sentenciaFactura;
     private java.sql.ResultSet resultadoClases;
+    private java.sql.Statement sentenciaProducto;
+    private java.sql.Statement sentenciaLineaCompra; 
     private java.sql.ResultSet resultado;
     private java.sql.ResultSet resultadoProducto;
     private DefaultTableModel modeloProductos;
     private DefaultTableModel modeloCompras;
     private JTableHeader header;
+    private int idTicket;
 }

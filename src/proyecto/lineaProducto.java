@@ -53,7 +53,7 @@ public class lineaProducto {
 
     public Object[] getLinea() {
 
-        Object[] a = {this.p.getNombre(), this.cantidad, this.getTotal()};
+        Object[] a = { this.p, this.cantidad, this.getTotal()};
         return a;
     }
 }

@@ -23,13 +23,15 @@ public class loggin extends javax.swing.JFrame {
     public loggin() {
         initComponents();
         conectarBD();
+        
+
     }
 
     private void conectarBD() {
         try {
             //1ºCrear el objeto Connection
             conexion = null;
-            conexion = Conexion.mySQL("fruteria2", "root", "");
+            conexion = Conexion.mySQL("fruteria3", "root", "");
             if (conexion == null) {
                 JOptionPane.showMessageDialog(this, "ERROR, ha sido posible conectar con la BD");
                 System.exit(0);
@@ -42,6 +44,10 @@ public class loggin extends javax.swing.JFrame {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+
+    
 
     public void validarUsuario() {
         int n = 0;
@@ -59,26 +65,28 @@ public class loggin extends javax.swing.JFrame {
 
                 if (n == 1) {
 
-                    String sentenciaPuesto = "SELECT empleados.cod_cargo FROM empleados WHERE empleados.nombre = '" + nombre + "'";
+                    String sentenciaPuesto = "SELECT empleados.id, empleados.cod_cargo FROM empleados WHERE empleados.nombre = '" + nombre + "'";
                     resultadoCargo = sentenciaCargo.executeQuery(sentenciaPuesto);
                     int cargo = 0;
-                    while (resultadoCargo.next()) { //Obtenemos el cargo de dicho empleado
-                        cargo = resultadoCargo.getInt("cod_cargo");
-                    }
+                    int id = 0;
                     
-                    if(cargo==1){   //Si el trabajador es gerente
-                       
-                    gerente form = new gerente();
-                    form.setVisible(true);
-                    this.dispose(); 
-                    }else if(cargo==2){          //Si el trajador es vendedor
-                        vendedor form = new vendedor();
+                    while (resultadoCargo.next()) { //Obtenemos el cargo de dicho empleado
+                        id=resultadoCargo.getInt("id");
+                        cargo = resultadoCargo.getInt("cod_cargo");
+
+                    }
+
+                    if (cargo == 1) {   //Si el trabajador es gerente
+                        gerente form = new gerente();
                         form.setVisible(true);
                         this.dispose();
+                    } else if (cargo == 2) {          //Si el trajador es vendedor
+                        ventana form = new ventana(id);
+                        form.setVisible(true);
+                        this.dispose();
+
                     }
-
                     
-
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Revise las credenciales", "ERROR de inicio de sesion", JOptionPane.ERROR_MESSAGE);
@@ -87,7 +95,7 @@ public class loggin extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(loggin.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
 
     /**
@@ -152,8 +160,6 @@ public class loggin extends javax.swing.JFrame {
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
 
         validarUsuario();
-
-
     }//GEN-LAST:event_btnAccederActionPerformed
 
     /**
@@ -202,8 +208,9 @@ public class loggin extends javax.swing.JFrame {
     private java.sql.Connection conexion;
     private java.sql.Statement sentenciaCargo;
     private java.sql.Statement sentencia;
-
+  
     private java.sql.ResultSet resultadoCargo;
     private java.sql.ResultSet resultado;
+  
 
 }
