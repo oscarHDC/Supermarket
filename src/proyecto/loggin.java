@@ -31,7 +31,7 @@ public class loggin extends javax.swing.JFrame {
         try {
             //1ºCrear el objeto Connection
             conexion = null;
-            conexion = Conexion.mySQL("fruteria3", "root", "");
+            conexion = Conexion.mySQL("fruteria4", "root", "");
             if (conexion == null) {
                 JOptionPane.showMessageDialog(this, "ERROR, ha sido posible conectar con la BD");
                 System.exit(0);
