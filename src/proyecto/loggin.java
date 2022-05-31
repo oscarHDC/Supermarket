@@ -81,7 +81,7 @@ public class loggin extends javax.swing.JFrame {
                         form.setVisible(true);
                         this.dispose();
                     } else if (cargo == 2) {          //Si el trajador es vendedor
-                        ventana form = new ventana(id);
+                        vendedor form = new vendedor(id);
                         form.setVisible(true);
                         this.dispose();
 

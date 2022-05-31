@@ -21,7 +21,9 @@ public class addCliente extends javax.swing.JFrame {
     /**
      * Creates new form cliente
      */
-    public addCliente() {
+    private int id;
+
+    public addCliente(int id) {
         initComponents();
         conectarBD();
 
@@ -62,8 +64,9 @@ public class addCliente extends javax.swing.JFrame {
         txfNombre = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txfTelefono = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnRegistrar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        btnRetroceder = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,42 +93,54 @@ public class addCliente extends javax.swing.JFrame {
         jPanel1.add(jLabel3);
         jPanel1.add(txfTelefono);
 
-        jButton1.setText("Registrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnRegistrarActionPerformed(evt);
             }
         });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("REGISTRO DE CLIENTE");
 
+        btnRetroceder.setText("<");
+        btnRetroceder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRetrocederActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnRetroceder, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(178, 178, 178))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(87, 87, 87)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(btnRetroceder)))
+                .addGap(47, 47, 47)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(btnRegistrar)
                 .addContainerGap(89, Short.MAX_VALUE))
         );
 
@@ -136,26 +151,37 @@ public class addCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txfTarjetaActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
 
-        int tarjetaCredito = Integer.parseInt(txfTarjeta.getText());
-        String nombre = txfNombre.getText();
-        int telefono = Integer.parseInt(txfTelefono.getText());
+        if (txfNombre.getText().isEmpty() || txfTarjeta.getText().isEmpty() || txfTelefono.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Campos vacios", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
 
-        int busqueda = busqueda(tarjetaCredito);    //Vemos si existe el cliente, es decir, la tarjeta de credito
+            int tarjetaCredito = Integer.parseInt(txfTarjeta.getText());
+            String nombre = txfNombre.getText();
+            int telefono = Integer.parseInt(txfTelefono.getText());
 
-        if (busqueda == 1) {
-            JOptionPane.showMessageDialog(this, "ERROR", "TARJETA EXISTENTE", JOptionPane.ERROR_MESSAGE);
-        } else {    //Si no existe
-            try {
-                String sql = "INSERT INTO `clientes`(`tarjetaCredito`, `nombre`, `telefono`) VALUES (" + tarjetaCredito + ",'" + nombre + "'," + telefono + ")";
-                sentenciaInsercion.executeUpdate(sql);
-            } catch (SQLException ex) {
-                Logger.getLogger(addCliente.class.getName()).log(Level.SEVERE, null, ex);
+            int busqueda = busqueda(tarjetaCredito);    //Vemos si existe el cliente, es decir, la tarjeta de credito
+
+            if (busqueda == 1) {
+                JOptionPane.showMessageDialog(this, "ERROR", "TARJETA YA REGISTRADA", JOptionPane.ERROR_MESSAGE);
+            } else {    //Si no existe
+                try {
+                    String sql = "INSERT INTO `clientes`(`tarjetaCredito`, `nombre`, `telefono`) VALUES (" + tarjetaCredito + ",'" + nombre + "'," + telefono + ")";
+                    sentenciaInsercion.executeUpdate(sql);
+                } catch (SQLException ex) {
+                    Logger.getLogger(addCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
-
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnRetrocederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetrocederActionPerformed
+        vendedor form = new vendedor(this.id);
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRetrocederActionPerformed
 
     private int busqueda(int tarjetaCredito) {
         int n = 0;
@@ -206,13 +232,14 @@ public class addCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new addCliente().setVisible(true);
+                new addCliente(0).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JButton btnRetroceder;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

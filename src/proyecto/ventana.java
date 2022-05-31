@@ -29,7 +29,7 @@ public class ventana extends javax.swing.JFrame {
      * Creates new form ventana
      */
     private int id;
-    private int idTicket;
+
     private String nombreCliente;
     private int numTarjeta;
 
@@ -43,15 +43,19 @@ public class ventana extends javax.swing.JFrame {
         lblIdEmpleado.setText(id + "");
 
         panelTarjeta.setVisible(false);
+        panelRealizarVenta.setVisible(false);
 
         LocalDate fecha = LocalDate.now();
         lblFecha.setText(fecha + "");
 
-        idTicket = 1;
-
+        //Almacenamos datos del cliente si paga con tarjeta
         this.nombreCliente = "";
         this.numTarjeta = 0;
 
+    }
+
+    ventana() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void conectarBD() {
@@ -69,8 +73,9 @@ public class ventana extends javax.swing.JFrame {
             sentenciaIVA = conexion.createStatement();
             sentenciaProducto = conexion.createStatement();
             sentenciaFactura = conexion.createStatement();
-
             sentenciaCliente = conexion.createStatement();
+            sentenciaIdTicket = conexion.createStatement();
+            updateStock = conexion.createStatement();
         } catch (SQLException ex) {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,6 +132,7 @@ public class ventana extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnConfirmar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        panelRealizarVenta = new javax.swing.JPanel();
         panelTarjeta = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         txfTarjeta = new javax.swing.JTextField();
@@ -142,6 +148,9 @@ public class ventana extends javax.swing.JFrame {
         lblFecha = new javax.swing.JLabel();
         lblIdEmpleado = new javax.swing.JLabel();
         btnAddVenta = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        lblNumTicket = new javax.swing.JLabel();
+        btnRetroceder = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -289,12 +298,12 @@ public class ventana extends javax.swing.JFrame {
                         .addGap(85, 85, 85)
                         .addComponent(btnValidar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txfTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         panelTarjetaLayout.setVerticalGroup(
             panelTarjetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTarjetaLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelTarjetaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txfNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -303,8 +312,7 @@ public class ventana extends javax.swing.JFrame {
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txfTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnValidar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnValidar))
         );
 
         grupoRadio.add(radioTarjeta);
@@ -347,7 +355,7 @@ public class ventana extends javax.swing.JFrame {
         panelInformacionLayout.setHorizontalGroup(
             panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInformacionLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInformacionLayout.createSequentialGroup()
                         .addGroup(panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -362,8 +370,7 @@ public class ventana extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addComponent(radioTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(radioEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         panelInformacionLayout.setVerticalGroup(
             panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,7 +383,7 @@ public class ventana extends javax.swing.JFrame {
                 .addGroup(panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(panelInformacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIdEmpleado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -391,6 +398,67 @@ public class ventana extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel9.setText("Nº Ticket");
+
+        lblNumTicket.setBackground(new java.awt.Color(255, 255, 255));
+        lblNumTicket.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblNumTicket.setOpaque(true);
+
+        javax.swing.GroupLayout panelRealizarVentaLayout = new javax.swing.GroupLayout(panelRealizarVenta);
+        panelRealizarVenta.setLayout(panelRealizarVentaLayout);
+        panelRealizarVentaLayout.setHorizontalGroup(
+            panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70)
+                        .addComponent(lblNumTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                        .addGap(269, 269, 269)
+                        .addComponent(btnAddVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(334, Short.MAX_VALUE))
+            .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRealizarVentaLayout.createSequentialGroup()
+                    .addContainerGap(393, Short.MAX_VALUE)
+                    .addComponent(panelTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(59, Short.MAX_VALUE)))
+            .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                    .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 388, Short.MAX_VALUE)))
+        );
+        panelRealizarVentaLayout.setVerticalGroup(
+            panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRealizarVentaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                    .addComponent(lblNumTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addComponent(btnAddVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                    .addGap(24, 24, 24)
+                    .addComponent(panelTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(92, Short.MAX_VALUE)))
+            .addGroup(panelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelRealizarVentaLayout.createSequentialGroup()
+                    .addGap(48, 48, 48)
+                    .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(82, Short.MAX_VALUE)))
+        );
+
+        btnRetroceder.setText("<");
+        btnRetroceder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRetrocederActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -398,19 +466,12 @@ public class ventana extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(224, 224, 224)
-                                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65)))
-                        .addComponent(panelTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(67, 67, 67)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(157, 157, 157)
+                                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -427,22 +488,26 @@ public class ventana extends javax.swing.JFrame {
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(292, 292, 292)
-                        .addComponent(btnAddVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                        .addGap(57, 57, 57)
+                        .addComponent(panelRealizarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnRetroceder)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
+                        .addComponent(btnRetroceder)
+                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbFrutas, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(31, 31, 31))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -453,13 +518,9 @@ public class ventana extends javax.swing.JFrame {
                     .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
-                .addComponent(btnAddVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addGap(56, 56, 56)
+                .addComponent(panelRealizarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -585,28 +646,17 @@ public class ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        /**
-         * try { LocalDate fecha = LocalDate.now();
-         * System.out.println(this.idTicket); String sql = "INSERT INTO
-         * `ticket`(`fecha`, `id_empleado`) VALUES ('" + fecha + "'," + 3 +
-         * ");"; sentenciaFactura.execute(sql);
-         * modeloCompras.fireTableDataChanged(); lineaProducto linea; Producto
-         * p; for (int i = 0; i < tablaCompra.getRowCount(); i++) { //Recorremos
-         * tablaCompras para obtener cada linea de compra y hacer el insert p =
-         * (Producto) tablaCompra.getValueAt(i, 0); int idProducto = p.getId();
-         * //Obtenemos id del producto int cantidad = (int)
-         * tablaCompra.getValueAt(i, 1); double precio = (double)
-         * tablaCompra.getValueAt(i, 2);
-         *
-         * String sentenciaLinea = "INSERT INTO `lineaticket`(`idticket`,
-         * `idproducto`, `cantidad`, `precio`) VALUES (" + this.idTicket + "," +
-         * idProducto + "," + cantidad + "," + precio + ")";
-         * //sentenciaLineaCompra.execute(sentenciaLinea); idTicket++; } } catch
-         * (SQLException ex) {
-         * Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null,
-         * ex); }
-         *
-         */
+
+        if (modeloCompras.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Añade productos al carrito", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+
+            panelRealizarVenta.setVisible(true);
+            int numTicket = getNumeroTicket();
+            numTicket += 2;
+            lblNumTicket.setText(numTicket + "");
+            System.out.println(numTicket);
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
 
@@ -623,39 +673,71 @@ public class ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_radioTarjetaActionPerformed
 
     private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
-        String nombre = txfNombre.getText();
-        int tarjeta = Integer.parseInt(txfTarjeta.getText());
 
-        int respuesta;
-        int resultadoValidacion = validarCliente(tarjeta, nombre);
-        System.out.println(resultadoValidacion);
-        if (resultadoValidacion == 0) { //Si el cliente no existe
-            respuesta = JOptionPane.showConfirmDialog(this, "Cliente no registrado, ¿desea registrar?");
-            if (respuesta == 0) {
-                addCliente cf = new addCliente();
+        if (txfNombre.getText().isEmpty() || txfTarjeta.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Rellene los datos", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int tarjeta = Integer.parseInt(txfTarjeta.getText());
+            String nombre = txfNombre.getText();
 
-                cf.setVisible(true);
-                cf.setAlwaysOnTop(true);    //Para que el frame de addCliente aparezca sobre este frame
+            int respuesta;
+            int resultadoValidacion = validarCliente(tarjeta, nombre);
+            System.out.println(resultadoValidacion);
+            if (resultadoValidacion == 0) { //Si el cliente no existe
+                respuesta = JOptionPane.showConfirmDialog(this, "Cliente no registrado, ¿desea registrar?");
+                if (respuesta == 0) {
+                    addCliente cf = new addCliente(this.id);
+
+                    cf.setVisible(true);
+                    cf.setAlwaysOnTop(true);    //Para que el frame de addCliente aparezca sobre este frame
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Confirmado", "Datos validos", JOptionPane.INFORMATION_MESSAGE);
+                this.nombreCliente = nombre;
+                this.numTarjeta = tarjeta;
 
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Confirmado", "Datos validos", JOptionPane.INFORMATION_MESSAGE);
-            this.nombreCliente = nombre;
-            this.numTarjeta = tarjeta;
 
         }
-
-
     }//GEN-LAST:event_btnValidarActionPerformed
 
     private void btnAddVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddVentaActionPerformed
-        guardarTicket();
-        
-        for(int i = 0;i<tablaCompra.getRowCount();i++){
-            
+
+        if (modeloCompras.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Añade productos al carrito", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+
+            guardarTicket();
+            Producto p;
+            lineaProducto l;
+            int id = getNumeroTicket() + 1;
+            for (int i = 0; i < tablaCompra.getRowCount(); i++) {   //Recorremos tabla compra
+                p = (Producto) tablaCompra.getValueAt(i, 0);
+                int cantidad = (int) tablaCompra.getValueAt(i, 1);
+                l = new lineaProducto(p, cantidad);
+
+                guardarLineaTicket(l, id);
+            }
+
+            JOptionPane.showMessageDialog(this, "PAGO REALIZADO", "TICKET REGISTRADO", JOptionPane.INFORMATION_MESSAGE);
+
+            //Limpiamos informacion
+            modeloCompras.setRowCount(0);
+            lblTotal.setText("");
+            txfNombre.setText("");
+            txfTarjeta.setText("");
+            lblNumTicket.setText("");
+
         }
-        
+
     }//GEN-LAST:event_btnAddVentaActionPerformed
+
+    private void btnRetrocederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetrocederActionPerformed
+        vendedor form = new vendedor(this.id);
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRetrocederActionPerformed
 
     private int validarCliente(int tarjeta, String nombre) {        //Validar cliente
         int n = 0;
@@ -674,7 +756,7 @@ public class ventana extends javax.swing.JFrame {
 
     }
 
-    private void guardarLinea(lineaProducto l, int idTicket) {
+    private void guardarLineaTicket(lineaProducto l, int idticket) {
         int idProducto = l.getP().getId();
         int cantidad = l.getCantidad();
         double precio = l.getTotal();
@@ -682,12 +764,13 @@ public class ventana extends javax.swing.JFrame {
         try {
             String sql = "INSERT INTO `lineaticket`(`idticket`, `idproducto`, `cantidad`, `precio`) VALUES (?,?,?,?)";
             sentenciaLineaCompra = conexion.prepareStatement(sql);
-            sentenciaLineaCompra.setInt(1, idTicket);
+            sentenciaLineaCompra.setInt(1, idticket);
             sentenciaLineaCompra.setInt(2, idProducto);
             sentenciaLineaCompra.setInt(3, cantidad);
             sentenciaLineaCompra.setDouble(4, precio);
 
             sentenciaLineaCompra.executeUpdate();
+            modificarStock(cantidad, idProducto);
         } catch (SQLException ex) {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -697,10 +780,10 @@ public class ventana extends javax.swing.JFrame {
         String sql = "";
 
         LocalDate fecha = LocalDate.parse(lblFecha.getText());
-        if (radioTarjeta.isSelected()) {    //Si sse paga con tarjeta
+        if (radioTarjeta.isSelected()) {    //Si se paga con tarjeta
             sql = "INSERT INTO `ticket`(`fecha`, `id_empleado`, `id_cliente`) VALUES ('" + fecha + "'," + this.id + "," + numTarjeta + ")";
         } else {
-            sql = "INSERT INTO `ticket`(`fecha`, `id_empleado`) VALUES ('" + fecha + "'," + this.id + ")";
+            sql = "INSERT INTO `ticket`(`fecha`, `id_empleado`) VALUES ('" + fecha + "'," + 3 + ")";
         }
 
         try {
@@ -709,7 +792,31 @@ public class ventana extends javax.swing.JFrame {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        idTicket++;
+    }
+
+    public void modificarStock(int cantidad, int idProducto) {
+        try {
+            String sql = "UPDATE `producto` SET `stock`= stock - " + cantidad + " WHERE producto.id = '" + idProducto + "'; ";
+            updateStock.executeUpdate(sql);
+        } catch (SQLException ex) {
+            Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int getNumeroTicket() {
+        int n = 0;
+        try {
+            String sql = "SELECT COUNT(*) FROM ticket";
+            resultadIdTicket = sentenciaIdTicket.executeQuery(sql);
+
+            while (resultadIdTicket.next()) {
+                n = resultadIdTicket.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return n;
     }
 
     /**
@@ -752,6 +859,7 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnConfirmar;
+    private javax.swing.JButton btnRetroceder;
     private javax.swing.JButton btnValidar;
     private javax.swing.JComboBox<String> cmbFrutas;
     private javax.swing.ButtonGroup grupoRadio;
@@ -763,12 +871,15 @@ public class ventana extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblIdEmpleado;
+    private javax.swing.JLabel lblNumTicket;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelInformacion;
+    private javax.swing.JPanel panelRealizarVenta;
     private javax.swing.JPanel panelTarjeta;
     private javax.swing.JRadioButton radioEfectivo;
     private javax.swing.JRadioButton radioTarjeta;
@@ -794,9 +905,10 @@ public class ventana extends javax.swing.JFrame {
     private DefaultTableModel modeloCompras;
 
     //Sentencia addLinea
-    ;
-    
-    
+    private java.sql.ResultSet resultadIdTicket;
+    private java.sql.Statement sentenciaIdTicket;
+    private java.sql.Statement updateStock;
+
     private JTableHeader header;
 
 }
