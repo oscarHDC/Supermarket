@@ -169,6 +169,10 @@ public class addCliente extends javax.swing.JFrame {
                 try {
                     String sql = "INSERT INTO `clientes`(`tarjetaCredito`, `nombre`, `telefono`) VALUES (" + tarjetaCredito + ",'" + nombre + "'," + telefono + ")";
                     sentenciaInsercion.executeUpdate(sql);
+                    JOptionPane.showMessageDialog(this, "Cliente creado","Base de datos actualizada",JOptionPane.INFORMATION_MESSAGE);
+                    txfNombre.setText("");
+                    txfTarjeta.setText("");
+                    txfTelefono.setText("");
                 } catch (SQLException ex) {
                     Logger.getLogger(addCliente.class.getName()).log(Level.SEVERE, null, ex);
                 }
