@@ -5,11 +5,17 @@
  */
 package proyecto;
 
+import bd.Conexion;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,18 +26,37 @@ public class vendedor extends javax.swing.JFrame {
     /**
      * Creates new form vendedor
      */
-    
     private int id;
-    
-    
+
     public vendedor(int id) {
         initComponents();
-        this.id=id;
-        lblId.setText(id+"");
+        this.id = id;
+        conectarBD();
+        lblNombreEmpleado.setText(getNombre(id));
+        lblFecha.setText(LocalDate.now() + "");
+        lblNumVentas.setText(getNumVentas(LocalDate.now())+"");
+
     }
 
-   
-    
+    private void conectarBD() {
+        try {
+            //1ºCrear el objeto Connection
+            conexion = null;
+            conexion = Conexion.mySQL("fruteria4", "root", "");
+            if (conexion == null) {
+                JOptionPane.showMessageDialog(this, "ERROR, ha sido posible conectar con la BD");
+                System.exit(0);
+            }
+            //2ºCrear el objeto Statement
+
+            sentenciaNombreEmpleado = conexion.createStatement();
+            sentenciaNumVentas = conexion.createStatement();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,24 +67,30 @@ public class vendedor extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuItem1 = new javax.swing.JMenuItem();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        panelBotones = new javax.swing.JPanel();
         btnVenta = new javax.swing.JButton();
         btnAddCliente = new javax.swing.JButton();
         btnReponer = new javax.swing.JButton();
-        lblId = new javax.swing.JLabel();
         btnCerrarSesion = new javax.swing.JButton();
+        panelInformacion = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lblNombreEmpleado = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lblNumVentas = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("BIENVENIDO");
+        panelBotones.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Elige una opcion", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 16))); // NOI18N
+        panelBotones.setLayout(new java.awt.GridLayout(1, 3, 20, 0));
 
-        jPanel1.setLayout(new java.awt.GridLayout(1, 3, 20, 0));
-
-        btnVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/carrito.jpg"))); // NOI18N
-        btnVenta.setText("VENTA");
+        btnVenta.setBackground(new java.awt.Color(255, 255, 255));
+        btnVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/carritoAdd (1).jpg"))); // NOI18N
+        btnVenta.setBorder(null);
         btnVenta.setMaximumSize(new java.awt.Dimension(100, 25));
         btnVenta.setMinimumSize(new java.awt.Dimension(100, 25));
         btnVenta.setPreferredSize(new java.awt.Dimension(100, 25));
@@ -68,25 +99,28 @@ public class vendedor extends javax.swing.JFrame {
                 btnVentaActionPerformed(evt);
             }
         });
-        jPanel1.add(btnVenta);
+        panelBotones.add(btnVenta);
 
-        btnAddCliente.setText("NUEVO CLIENTE");
+        btnAddCliente.setBackground(new java.awt.Color(255, 255, 255));
+        btnAddCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/descarga (1).png"))); // NOI18N
         btnAddCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAddCliente);
+        panelBotones.add(btnAddCliente);
 
-        btnReponer.setText("REPONER");
+        btnReponer.setBackground(new java.awt.Color(255, 255, 255));
+        btnReponer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/almacen (1).png"))); // NOI18N
         btnReponer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReponerActionPerformed(evt);
             }
         });
-        jPanel1.add(btnReponer);
+        panelBotones.add(btnReponer);
 
         btnCerrarSesion.setBackground(new java.awt.Color(255, 0, 0));
+        btnCerrarSesion.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         btnCerrarSesion.setText("Cerrar sesion");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,47 +128,75 @@ public class vendedor extends javax.swing.JFrame {
             }
         });
 
+        panelInformacion.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panelInformacion.setLayout(new java.awt.GridLayout(3, 2, 10, 10));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabel1.setText("NOMBRE");
+        panelInformacion.add(jLabel1);
+
+        lblNombreEmpleado.setBackground(new java.awt.Color(255, 255, 255));
+        lblNombreEmpleado.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblNombreEmpleado.setOpaque(true);
+        panelInformacion.add(lblNombreEmpleado);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabel2.setText("FECHA");
+        panelInformacion.add(jLabel2);
+
+        lblFecha.setBackground(new java.awt.Color(255, 255, 255));
+        lblFecha.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblFecha.setOpaque(true);
+        panelInformacion.add(lblFecha);
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabel3.setText("Nº VENTAS HOY");
+        panelInformacion.add(jLabel3);
+
+        lblNumVentas.setBackground(new java.awt.Color(255, 255, 255));
+        lblNumVentas.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        lblNumVentas.setOpaque(true);
+        panelInformacion.add(lblNumVentas);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 3, 20)); // NOI18N
+        jLabel4.setText("BIENVENIDO/A");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(92, 92, 92)
+                .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 853, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(325, Short.MAX_VALUE))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(247, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(83, 83, 83))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(77, 77, 77)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(23, 23, 23)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(panelInformacion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addGap(47, 47, 47))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentaActionPerformed
-        
-       ImageIcon i = new ImageIcon(Toolkit.getDefaultToolkit().getClass().getResource("/imgProyecto/carrito.jpg"));
-       Image image = i.getImage();
-       
-       Image img2 = image.getScaledInstance(btnVenta.getWidth(), btnVenta.getHeight(), Image.SCALE_SMOOTH);
-       btnVenta.setIcon((Icon)img2);
-        
+
         ventana form = new ventana(this.id);
         form.setVisible(true);
         this.dispose();
@@ -149,17 +211,48 @@ public class vendedor extends javax.swing.JFrame {
 
     private void btnReponerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReponerActionPerformed
         reponerProductos form = new reponerProductos(this.id);
-                form.setVisible(true);
-                this.dispose();
+        form.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnReponerActionPerformed
 
-    
-    
+
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         loggin form = new loggin();
         form.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private String getNombre(int id) {
+        String n = "";
+        try {
+            String sql = "SELECT `nombre` FROM `empleados` WHERE id = " + id + ";";
+
+            resultadoNombreEmpleado = sentenciaNombreEmpleado.executeQuery(sql);
+
+            while (resultadoNombreEmpleado.next()) {
+                return resultadoNombreEmpleado.getString("nombre");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(vendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+
+    private int getNumVentas(LocalDate fecha) {
+        int n = 0;
+
+        try {
+            String sql = "SELECT COUNT(*) FROM `ticket` WHERE fecha=" + fecha + ";";
+            resultadoNumVentas = sentenciaNumVentas.executeQuery(sql);
+            
+            while(resultadoNumVentas.next()){
+                return resultadoNumVentas.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(vendedor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
 
     /**
      * @param args the command line arguments
@@ -202,8 +295,21 @@ public class vendedor extends javax.swing.JFrame {
     private javax.swing.JButton btnReponer;
     private javax.swing.JButton btnVenta;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblFecha;
+    private javax.swing.JLabel lblNombreEmpleado;
+    private javax.swing.JLabel lblNumVentas;
+    private javax.swing.JPanel panelBotones;
+    private javax.swing.JPanel panelInformacion;
     // End of variables declaration//GEN-END:variables
+    private java.sql.Connection conexion;
+    private java.sql.ResultSet resultadoNombreEmpleado;
+    private java.sql.Statement sentenciaNombreEmpleado;
+
+    private java.sql.ResultSet resultadoNumVentas;
+    private java.sql.Statement sentenciaNumVentas;
+
 }
