@@ -56,4 +56,6 @@ public class lineaProducto {
         Object[] a = { this.p, this.cantidad, this.getTotal()};
         return a;
     }
+    
+   
 }
