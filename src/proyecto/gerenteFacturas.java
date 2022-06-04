@@ -6,6 +6,7 @@
 package proyecto;
 
 import bd.Conexion;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Level;
@@ -39,11 +40,12 @@ public class gerenteFacturas extends javax.swing.JFrame {
             }
             //2ºCrear el objeto Statement
 
-            sentenciaTicket = conexion.createStatement();
-            sentenciaLineaTicket = conexion.createStatement();
+            sentenciaTicket = conexion.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            sentenciaLineaTicket = conexion.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             sentenciaProducto = conexion.createStatement();
             sentenciaNombreEmpleado = conexion.createStatement();
             sentenciaCliente = conexion.createStatement();
+            sentenciaNumeroTickets = conexion.createStatement();
 
         } catch (SQLException ex) {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,7 +67,6 @@ public class gerenteFacturas extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
-        panelBotones = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         panelTicket = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -86,10 +87,11 @@ public class gerenteFacturas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         lblTelefono = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        panelBotones = new javax.swing.JPanel();
+        btnFirst = new javax.swing.JButton();
+        btnPrevious = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnLast = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,8 +113,6 @@ public class gerenteFacturas extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tabla);
-
-        panelBotones.setLayout(new java.awt.GridLayout());
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -203,13 +203,38 @@ public class gerenteFacturas extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Primero");
+        panelBotones.setLayout(new java.awt.GridLayout());
 
-        jButton2.setText("Atras");
+        btnFirst.setBackground(new java.awt.Color(255, 255, 255));
+        btnFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/first.png"))); // NOI18N
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+        panelBotones.add(btnFirst);
 
-        jButton3.setText("Alante");
+        btnPrevious.setBackground(new java.awt.Color(255, 255, 255));
+        btnPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/previous.png"))); // NOI18N
+        btnPrevious.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreviousActionPerformed(evt);
+            }
+        });
+        panelBotones.add(btnPrevious);
 
-        jButton4.setText("Ultimo");
+        btnNext.setBackground(new java.awt.Color(255, 255, 255));
+        btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/next.png"))); // NOI18N
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+        panelBotones.add(btnNext);
+
+        btnLast.setBackground(new java.awt.Color(255, 255, 255));
+        btnLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/last.png"))); // NOI18N
+        panelBotones.add(btnLast);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -218,31 +243,22 @@ public class gerenteFacturas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(45, 45, 45)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jButton1)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(163, 163, 163)))
-                                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(77, 77, 77))))
+                        .addGap(224, 224, 224)
+                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(55, 55, 55)
                         .addComponent(panelTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(83, 83, 83)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscar))))
-                .addContainerGap(103, Short.MAX_VALUE))
+                            .addComponent(btnBuscar)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(132, 132, 132)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(253, 253, 253)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(321, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,38 +272,54 @@ public class gerenteFacturas extends javax.swing.JFrame {
                         .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(99, 99, 99))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(73, 73, 73))))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        modelo.setRowCount(0);
+        int n = Integer.parseInt(txfCodigo.getText());
 
-        mostrarDatos();
-        mostrarLineaTicket();
+        lblEmpleado.setText("");
+        lblFecha.setText("");
+        lblTotal.setText("");
+        lblMetodo.setText("");
+        lblEmpleado.setText("");
 
-        double total = 0;                //Acumulador precio total
-        for (int i = 0; i < tabla.getRowCount(); i++) {
+        if (n >= (getNumeroTickets() + 1) || n < 0) {
+            JOptionPane.showMessageDialog(this, "Ticket inexistente", "ALERTA", JOptionPane.INFORMATION_MESSAGE);
+        } else {
 
-            total += (double) tabla.getValueAt(i, 3);//Row de precio
+            mostrarDatos();
+            mostrarLineaTicket();
 
-            lblTotal.setText((Math.round(total * 100.0) / 100.0) + " €");
+            double total = 0;                //Acumulador precio total
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+
+                total += (double) tabla.getValueAt(i, 3);//Row de precio
+
+                lblTotal.setText((Math.round(total * 100.0) / 100.0) + " €");
+            }
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
+       
+    }//GEN-LAST:event_btnPreviousActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNextActionPerformed
 
     public void mostrarDatos() {
 
@@ -298,37 +330,47 @@ public class gerenteFacturas extends javax.swing.JFrame {
             String sql = "SELECT `fecha`, `id_empleado`, `id_cliente` FROM `ticket` WHERE ticket.id = " + codigo;
             resultadoTicket = sentenciaTicket.executeQuery(sql);
 
-            if (!resultadoTicket.next()) {
-                JOptionPane.showMessageDialog(this, "Ticket inexistente", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+            while (resultadoTicket.next()) {
 
-            } else {
+                LocalDate fecha = LocalDate.parse(resultadoTicket.getString(1));
+                int codigoEmpleado = resultadoTicket.getInt(2);
+                int codigoCliente = resultadoTicket.getInt(3);
 
-                while (resultadoTicket.next()) {
-                    LocalDate fecha = LocalDate.parse(resultadoTicket.getString(1));
-                    int codigoEmpleado = resultadoTicket.getInt(2);
-                    int codigoCliente = resultadoTicket.getInt(3);
+                lblEmpleado.setText(getEmpleado(codigoEmpleado));
+                lblFecha.setText(fecha + "");
+                c = getCliente(codigoCliente);
 
-                    lblEmpleado.setText(getEmpleado(codigoEmpleado));
-                    lblFecha.setText(fecha + "");
-                    c = getCliente(codigoCliente);
-
-                    if (codigoCliente == 0) { //Pago efectivo -> No hay cliente 
-                        lblCliente.setText("");
-                        lblTarjeta.setText("");
-                        lblTelefono.setText("");
-                        lblMetodo.setText("Efectivo");
-                    } else {  //Pago con tarjeta -> Existe el cliente
-                        lblCliente.setText(c.getNombre());
-                        lblTarjeta.setText(c.getTarjeta() + "");
-                        lblTelefono.setText(c.getTelefono() + "");
-                        lblMetodo.setText("Tarjeta");
-                    }
+                if (codigoCliente == 0) { //Pago efectivo -> No hay cliente 
+                    lblCliente.setText("");
+                    lblTarjeta.setText("");
+                    lblTelefono.setText("");
+                    lblMetodo.setText("Efectivo");
+                } else {  //Pago con tarjeta -> Existe el cliente
+                    lblCliente.setText(c.getNombre());
+                    lblTarjeta.setText(c.getTarjeta() + "");
+                    lblTelefono.setText(c.getTelefono() + "");
+                    lblMetodo.setText("Tarjeta");
                 }
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(gerenteFacturas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public int getNumeroTickets() {
+        try {
+            String sql = "SELECT COUNT(*) FROM ticket";
+            resultadoNumeroTickets = sentenciaNumeroTickets.executeQuery(sql);
+
+            while (resultadoNumeroTickets.next()) {
+                return resultadoNumeroTickets.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(gerenteFacturas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public void mostrarLineaTicket() {
@@ -458,10 +500,10 @@ public class gerenteFacturas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrevious;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -491,12 +533,14 @@ public class gerenteFacturas extends javax.swing.JFrame {
     private java.sql.Statement sentenciaProducto;
     private java.sql.Statement sentenciaNombreEmpleado;
     private java.sql.Statement sentenciaCliente;
+    private java.sql.Statement sentenciaNumeroTickets;
 
     private java.sql.ResultSet resultadoTicket;
     private java.sql.ResultSet resultadoProducto;
     private java.sql.ResultSet resultadoLineaTicket;
     private java.sql.ResultSet resultadoNombreEmpleado;
     private java.sql.ResultSet resultadoCliente;
+    private java.sql.ResultSet resultadoNumeroTickets;
 
     private DefaultTableModel modelo;
 
