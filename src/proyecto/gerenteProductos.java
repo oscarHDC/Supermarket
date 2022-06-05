@@ -86,6 +86,7 @@ public class gerenteProductos extends javax.swing.JFrame {
         btnAdd = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,6 +155,13 @@ public class gerenteProductos extends javax.swing.JFrame {
             }
         });
 
+        btnAtras.setText("<");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -169,15 +177,19 @@ public class gerenteProductos extends javax.swing.JFrame {
                                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
+                        .addGap(21, 21, 21)
+                        .addComponent(btnAtras)
+                        .addGap(40, 40, 40)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAtras))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -235,6 +247,12 @@ public class gerenteProductos extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnBorrarActionPerformed
 
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        gerente form = new gerente();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -272,6 +290,7 @@ public class gerenteProductos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JComboBox<String> combo;
     private javax.swing.JLabel jLabel1;

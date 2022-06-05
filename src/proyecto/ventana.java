@@ -79,6 +79,8 @@ public class ventana extends javax.swing.JFrame {
         }
     }
 
+    
+    
     private void initTablaProductos() {
         modeloProductos = (DefaultTableModel) tablaProductos.getModel();
         header = tablaProductos.getTableHeader();
@@ -554,7 +556,7 @@ public class ventana extends javax.swing.JFrame {
                     columnas[1] = resultado.getFloat("precio");
                     columnas[2] = resultado.getInt("stock");
 
-                    if (resultado.getInt("stock") < 0) {
+                    if (resultado.getInt("stock") <= 0) {
 
                     } else {  //Si hay stock
                         modeloProductos.addRow(columnas);
@@ -665,7 +667,7 @@ public class ventana extends javax.swing.JFrame {
 
             panelRealizarVenta.setVisible(true);
             int numTicket = getNumeroTicket();
-            numTicket += 2;
+            numTicket += 1;
             lblNumTicket.setText("0000" + numTicket);
             System.out.println(numTicket);
         }
@@ -723,7 +725,7 @@ public class ventana extends javax.swing.JFrame {
             guardarTicket();
             Producto p;
             lineaProducto l;
-            int id = getNumeroTicket() + 1;
+            int id = Integer.parseInt(lblNumTicket.getText());
             for (int i = 0; i < tablaCompra.getRowCount(); i++) {   //Recorremos tabla compra
                 p = (Producto) tablaCompra.getValueAt(i, 0);
                 int cantidad = (int) tablaCompra.getValueAt(i, 1);

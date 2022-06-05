@@ -33,6 +33,7 @@ public class reponerProductos extends javax.swing.JFrame {
         initComponents();
         conectarBD();
         initTablaCompras();
+        initCombo();
         this.idEmpleado = id;
         this.codigoProducto = 0;
 
@@ -488,7 +489,7 @@ public class reponerProductos extends javax.swing.JFrame {
             txfId.setText("");
             txfId.setEnabled(false);
             comboProductoCategoria.setEnabled(true);
-            initCombo();
+            
 
         }
     }//GEN-LAST:event_rbProductoCategoriaActionPerformed
@@ -571,7 +572,7 @@ public class reponerProductos extends javax.swing.JFrame {
                 try {
                     int cantidad = Integer.parseInt(txfCantidad.getText());
                     String sql = "UPDATE `producto` SET `stock`= stock + " + cantidad + " WHERE producto.id = " + this.codigoProducto;
-                    int filas = sentenciaReponer.executeUpdate(sql);
+                    int filas = sentenciaReponer.executeUpdate(sql);    //Si se ha cumplido el update
 
                     if (filas > 0) {
                         JOptionPane.showMessageDialog(this, "Stock actualizado", "Operacion realizada", JOptionPane.INFORMATION_MESSAGE);
@@ -711,7 +712,7 @@ public class reponerProductos extends javax.swing.JFrame {
 
             modeloProductos.setRowCount(0); //Limpiamos la tabla
 
-            initCombo();
+            
         }
     }
 

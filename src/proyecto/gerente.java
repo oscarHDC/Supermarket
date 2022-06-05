@@ -28,30 +28,93 @@ public class gerente extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        btnEmpleados = new javax.swing.JButton();
+        btnProducto = new javax.swing.JButton();
+        btnFacturas = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("gerente");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 23)); // NOI18N
+        jLabel1.setText("¿Que desea hacer?");
+
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0, 10, 0));
+
+        btnEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/empleados.jpg"))); // NOI18N
+        btnEmpleados.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmpleadosActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEmpleados);
+
+        btnProducto.setBackground(new java.awt.Color(255, 255, 255));
+        btnProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/nuevoProducto (2).png"))); // NOI18N
+        btnProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProductoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnProducto);
+
+        btnFacturas.setBackground(new java.awt.Color(255, 255, 255));
+        btnFacturas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgProyecto/factura (1).png"))); // NOI18N
+        btnFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFacturasActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnFacturas);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 3, 23)); // NOI18N
+        jLabel2.setText("GERENTE");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jLabel1)
-                .addContainerGap(500, Short.MAX_VALUE))
+                .addGap(78, 78, 78)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(jLabel1)
-                .addContainerGap(369, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(248, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
+        gerenteEmpleado form = new gerenteEmpleado();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEmpleadosActionPerformed
+
+    private void btnProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoActionPerformed
+        gerenteProductos form = new gerenteProductos();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnProductoActionPerformed
+
+    private void btnFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturasActionPerformed
+        gerenteFacturas form = new gerenteFacturas();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnFacturasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -89,6 +152,11 @@ public class gerente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEmpleados;
+    private javax.swing.JButton btnFacturas;
+    private javax.swing.JButton btnProducto;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

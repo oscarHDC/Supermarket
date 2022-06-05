@@ -87,11 +87,7 @@ public class gerenteFacturas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         lblTelefono = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
-        panelBotones = new javax.swing.JPanel();
-        btnFirst = new javax.swing.JButton();
-        btnPrevious = new javax.swing.JButton();
-        btnNext = new javax.swing.JButton();
-        btnLast = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -203,38 +199,12 @@ public class gerenteFacturas extends javax.swing.JFrame {
             }
         });
 
-        panelBotones.setLayout(new java.awt.GridLayout());
-
-        btnFirst.setBackground(new java.awt.Color(255, 255, 255));
-        btnFirst.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/first.png"))); // NOI18N
-        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+        btnAtras.setText("<");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFirstActionPerformed(evt);
+                btnAtrasActionPerformed(evt);
             }
         });
-        panelBotones.add(btnFirst);
-
-        btnPrevious.setBackground(new java.awt.Color(255, 255, 255));
-        btnPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/previous.png"))); // NOI18N
-        btnPrevious.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPreviousActionPerformed(evt);
-            }
-        });
-        panelBotones.add(btnPrevious);
-
-        btnNext.setBackground(new java.awt.Color(255, 255, 255));
-        btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/next.png"))); // NOI18N
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
-            }
-        });
-        panelBotones.add(btnNext);
-
-        btnLast.setBackground(new java.awt.Color(255, 255, 255));
-        btnLast.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgBotones/last.png"))); // NOI18N
-        panelBotones.add(btnLast);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -242,9 +212,6 @@ public class gerenteFacturas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(224, 224, 224)
-                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(55, 55, 55)
                         .addComponent(panelTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -256,15 +223,19 @@ public class gerenteFacturas extends javax.swing.JFrame {
                         .addGap(132, 132, 132)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(253, 253, 253)
+                        .addGap(30, 30, 30)
+                        .addComponent(btnAtras)
+                        .addGap(144, 144, 144)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(321, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAtras))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -274,9 +245,7 @@ public class gerenteFacturas extends javax.swing.JFrame {
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
         pack();
@@ -309,17 +278,11 @@ public class gerenteFacturas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
-        
-    }//GEN-LAST:event_btnFirstActionPerformed
-
-    private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
-       
-    }//GEN-LAST:event_btnPreviousActionPerformed
-
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnNextActionPerformed
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        gerente form = new gerente();
+        form.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     public void mostrarDatos() {
 
@@ -499,11 +462,8 @@ public class gerenteFacturas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnFirst;
-    private javax.swing.JButton btnLast;
-    private javax.swing.JButton btnNext;
-    private javax.swing.JButton btnPrevious;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -521,7 +481,6 @@ public class gerenteFacturas extends javax.swing.JFrame {
     private javax.swing.JLabel lblTarjeta;
     private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTotal;
-    private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelTicket;
     private javax.swing.JTable tabla;

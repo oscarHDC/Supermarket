@@ -23,8 +23,6 @@ public class loggin extends javax.swing.JFrame {
     public loggin() {
         initComponents();
         conectarBD();
-        
-
     }
 
     private void conectarBD() {
@@ -55,9 +53,11 @@ public class loggin extends javax.swing.JFrame {
         //Obtenemos datos
         String nombre = txfNombre.getText();
         String clave = String.valueOf(txfAcceder.getPassword());
+        String dni = txfDNI.getText();
 
         try {
-            String sentenciaSQL = "SELECT empleados.nombre, empleados.clave FROM empleados WHERE nombre='" + nombre + "' and clave='" + clave + "';";
+            String sentenciaSQL = "SELECT empleados.nombre, empleados.clave FROM empleados WHERE DNI = '"+ dni +"' and nombre='" + nombre + "' and clave='" + clave + "' and "
+                    + "contratado = true ;";
             resultado = sentencia.executeQuery(sentenciaSQL);
 
             if (resultado.next()) {
@@ -65,7 +65,7 @@ public class loggin extends javax.swing.JFrame {
 
                 if (n == 1) {
 
-                    String sentenciaPuesto = "SELECT empleados.id, empleados.cod_cargo FROM empleados WHERE empleados.nombre = '" + nombre + "'";
+                    String sentenciaPuesto = "SELECT empleados.id, empleados.cod_cargo FROM empleados WHERE empleados.DNI = '" + dni + "'";
                     resultadoCargo = sentenciaCargo.executeQuery(sentenciaPuesto);
                     int cargo = 0;
                     int id = 0;
@@ -108,6 +108,8 @@ public class loggin extends javax.swing.JFrame {
     private void initComponents() {
 
         panelLoggin = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        txfDNI = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txfNombre = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -118,7 +120,14 @@ public class loggin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panelLoggin.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Introduzca datos: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(153, 153, 153))); // NOI18N
-        panelLoggin.setLayout(new java.awt.GridLayout(2, 2, 0, 15));
+        panelLoggin.setLayout(new java.awt.GridLayout(3, 2, 0, 15));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 17)); // NOI18N
+        jLabel4.setText("DNI");
+        panelLoggin.add(jLabel4);
+
+        txfDNI.setFont(new java.awt.Font("Tahoma", 0, 17)); // NOI18N
+        panelLoggin.add(txfDNI);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 17)); // NOI18N
         jLabel1.setText("Nombre");
@@ -167,8 +176,8 @@ public class loggin extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(panelLoggin, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelLoggin, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addGap(27, 27, 27)
                 .addComponent(btnAcceder)
                 .addGap(157, 157, 157))
@@ -222,8 +231,10 @@ public class loggin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel panelLoggin;
     private javax.swing.JPasswordField txfAcceder;
+    private javax.swing.JTextField txfDNI;
     private javax.swing.JTextField txfNombre;
     // End of variables declaration//GEN-END:variables
     private java.sql.Connection conexion;

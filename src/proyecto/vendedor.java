@@ -56,6 +56,8 @@ public class vendedor extends javax.swing.JFrame {
             Logger.getLogger(ventana.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -242,7 +244,7 @@ public class vendedor extends javax.swing.JFrame {
         int n = 0;
 
         try {
-            String sql = "SELECT COUNT(*) FROM `ticket` WHERE fecha=" + fecha + ";";
+            String sql = "SELECT COUNT(*) FROM `ticket` WHERE fecha='" + fecha.toString() + "';";
             resultadoNumVentas = sentenciaNumVentas.executeQuery(sql);
             
             while(resultadoNumVentas.next()){

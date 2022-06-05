@@ -21,11 +21,12 @@ public class addCliente extends javax.swing.JFrame {
     /**
      * Creates new form cliente
      */
-    private int id;
+    private int idEmpleado;
 
     public addCliente(int id) {
         initComponents();
         conectarBD();
+        this.idEmpleado = id;
 
     }
 
@@ -195,7 +196,7 @@ public class addCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnRetrocederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRetrocederActionPerformed
-        vendedor form = new vendedor(this.id);
+        vendedor form = new vendedor(this.idEmpleado);
         form.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnRetrocederActionPerformed
