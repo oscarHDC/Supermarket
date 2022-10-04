@@ -1,0 +1,149 @@
+create table categoria (
+	id int not null,
+    nombre varchar(255),
+    
+    PRIMARY KEY(id)
+
+);
+
+
+create table producto (
+	id int NOT NULL AUTO_INCREMENT,
+    nombre varchar(255),
+    precio float,
+	stock int,
+    iva int,
+    cod_categoria int,
+	
+    
+    PRIMARY KEY(id),
+    FOREIGN KEY (cod_categoria) REFERENCES categoria(id)
+	
+
+);
+
+create table cargos(
+	id int not null,
+	nombre varchar(255),
+
+	PRIMARY KEY (id)
+
+);
+
+create table empleados(
+	id int NOT NULL AUTO_INCREMENT,
+	DNI varchar(255) ,
+	nombre varchar(255),
+	clave varchar(10),
+	cod_cargo int,
+	salario double,
+	contratado boolean,
+    
+    	PRIMARY KEY(id),
+	FOREIGN KEY(cod_cargo) REFERENCES cargos(id)
+
+);
+
+
+create table clientes(
+	
+	tarjetaCredito int,
+	nombre varchar(255),
+	telefono int(9),
+
+	PRIMARY KEY(tarjetaCredito)
+
+);
+
+
+create table ticket(
+	id int NOT NULL AUTO_INCREMENT,
+	fecha date,
+	id_empleado int,
+	id_cliente int,
+
+	PRIMARY KEY(id),
+	FOREIGN KEY(id_empleado) REFERENCES empleados(id),
+	FOREIGN KEY(id_cliente) REFERENCES clientes(tarjetaCredito)
+);
+
+create table lineaticket(
+	idlinea int NOT NULL AUTO_INCREMENT,
+	idticket int,
+	idproducto int,
+	cantidad int,
+	precio double,
+
+	PRIMARY KEY (idlinea),
+	FOREIGN KEY (idproducto) REFERENCES producto(id),
+	FOREIGN KEY (idticket) REFERENCES ticket(id)
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO `categoria`(`id`, `nombre`) VALUES (1,'frutas'),(2,'verduras'),(3,'cereales'),(4,'lacteos'),(5,'pescados'),(6,'carnes'),(7,'alcohol');
+
+
+
+INSERT INTO `producto`(`nombre`, `precio`, `stock`, `iva`, `cod_categoria`) VALUES ('sandia',1.5,50,4,1),('manzana',1.2,50,4,1),('pera',0.75,50,4,1),('fresa',1.8,50,4,1),('melon',2.5,50,4,1),('tomate',1.5,50,4,1),('platano',0.5,50,4,1);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('coliflor',5.5,50,4,2),('brocoli',3.2,50,4,2),('lechuga',0.75,50,4,2),('acelgas',1.8,50,4,2),('espinacas',2.25,50,4,2),('repollo',2.5,50,4,2),('pepino',0.5,50,4,2);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('arroz',1.5,50,4,3),('harina',1.2,50,4,3),('levadura',0.75,50,4,3),('pan',1.2,50,4,3),('trigo',2.25,50,4,3),('maiz',1.5,50,4,3),('avena',0.5,50,4,3);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('leche',0.75,50,4,4),('queso',2.75,50,4,4),('yogures',0.65,50,4,4),('mantequilla',1.4,50,4,4),('nata',2.75,50,4,4),('cuajada',1.35,50,4,4),('helado',2.5,50,4,4);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('lubina',4.75,50,10,5),('merluza',5.75,50,10,5),('lenguadina',3.65,50,10,5),('salmon',6,50,10,5),('rape',4.75,50,10,5),('pescadilla',1.35,50,10,5),('anchoas',2.5,50,10,5);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('ternera',4.75,50,10,6),('pollo',3.75,50,10,6),('lomo',3.65,50,10,6),('chorizo',4.20,50,10,6),('jamon',4.75,50,10,6),('bacon',1.55,50,10,6),('buey',15.5,50,10,6);
+
+
+INSERT INTO `producto`(`nombre`, `precio`,`stock`, `iva`, `cod_categoria`) VALUES ('whisky',10.75,50,21,7),('ron',8.75,50,21,7),('vino',1.65,50,21,7),('ginebra',7.20,50,21,7),('cerveza',0.75,50,21,7);
+
+
+INSERT INTO `cargos`(`id`, `nombre`) VALUES (1,'Gerente'),(2,'Vendedor');
+
+
+INSERT INTO `empleados`( `DNI`, `nombre`, `clave`, `cod_cargo`, `salario`, `contratado`) VALUES ('123456789Q', 'Pepe Garcia','fruteria',1,3000,true);
+INSERT INTO `empleados`( `DNI`, `nombre`, `clave`, `cod_cargo`, `salario`, `contratado`) VALUES ('987654321Q', 'Juan Rubio','fruteria',1,3000,true);
+INSERT INTO `empleados`( `DNI`, `nombre`, `clave`, `cod_cargo`, `salario`, `contratado`) VALUES ('123123123Q', 'Oscar Hernanz','fruteria',2,1500,true);
+INSERT INTO `empleados`( `DNI`, `nombre`, `clave`, `cod_cargo`, `salario`, `contratado`) VALUES ('321321321Q', 'Miguel Castro','fruteria',2,1700,true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
